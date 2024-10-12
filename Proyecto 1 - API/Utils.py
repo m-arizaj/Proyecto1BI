@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split, cross_val_score
 import numpy as np
 
 # Cargar el modelo entrenado
-model = joblib.load('modelo_svc.joblib')
+model = joblib.load('modelo_nb.joblib')
 
 # Cargar el vectorizador
 tfidf_vectorizer = joblib.load('vectorizer_tfidf.joblib')
@@ -50,18 +50,15 @@ def retrain_model(texts, labels):
     
     X_train_tfidf = tfidf_vectorizer.transform(X_train)
     X_test_tfidf = tfidf_vectorizer.transform(X_test)
-    
-    model.fit(X_train_tfidf, y_train)
-    
+
+    model.partial_fit(X_train_tfidf, y_train, classes=np.unique(labels))
+
     y_pred = model.predict(X_test_tfidf)
     
     precision = precision_score(y_test, y_pred, average='weighted')
     recall = recall_score(y_test, y_pred, average='weighted')
     f1 = f1_score(y_test, y_pred, average='weighted')
     
-    joblib.dump(model, 'modelo_svc.joblib')
+    joblib.dump(model, 'modelo_nb.joblib')
     
-    f1_scores = cross_val_score(model, X_train_tfidf, y_train, cv=5, scoring='f1_weighted')
-    f1_score_mean = np.mean(f1_scores)
-    
-    return precision, recall, f1, f1_score_mean
+    return precision, recall, f1

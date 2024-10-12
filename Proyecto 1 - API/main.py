@@ -36,13 +36,12 @@ async def retrain(input_data: RetrainInput):
         # Usar preprocess_text para limpiar los textos antes del reentrenamiento
         cleaned_texts = preprocess_text(input_data.texts)
         
-        precision, recall, f1, f1_score_mean = retrain_model(cleaned_texts, input_data.labels)  # Pasar los textos ya procesados
+        precision, recall, f1 = retrain_model(cleaned_texts, input_data.labels)  # Pasar los textos ya procesados
         logging.info(f"Metricas tras reentrenamiento - Precision: {precision}, Recall: {recall}, F1: {f1}")
         return {
             "precision": precision,
             "recall": recall,
-            "f1_score": f1,
-            "f1_score_mean": f1_score_mean
+            "f1_score": f1
         }
     except Exception as e:
         logging.error(f"Error en reentrenamiento: {str(e)}")
