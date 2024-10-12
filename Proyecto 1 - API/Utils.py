@@ -6,10 +6,10 @@ from sklearn.model_selection import train_test_split, cross_val_score
 import numpy as np
 
 # Cargar el modelo entrenado
-model = joblib.load('modelo_nb.joblib')
+model = joblib.load('Proyecto 1 - API/modelo_nb.joblib')
 
 # Cargar el vectorizador
-tfidf_vectorizer = joblib.load('vectorizer_tfidf.joblib')
+tfidf_vectorizer = joblib.load('Proyecto 1 - API/vectorizer_tfidf.joblib')
 
 def clean_text(text):
     text = text.lower()
