@@ -1,25 +1,13 @@
-import { Container, Row, Col, Button, Card, Navbar, Nav } from 'react-bootstrap'
-import Logo from '../assets/images/UNFPA_logo.png'
+import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom'; // Importa Link
+import NavBar from './NavBar';
+import Footer from './Footer';
 
 const Home = () => {
   return (
     <>
       {/* Header */}
-      <Navbar bg='light' expand='lg'>
-        <Container>
-          <Navbar.Brand href='#home'>
-            <img src={Logo} alt='UNFPA Logo' width='40' />
-            <span className='ms-3'>Análisis de Opiniones y ODS</span>
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls='basic-navbar-nav' />
-          <Navbar.Collapse id='basic-navbar-nav'>
-            <Nav className='ms-auto'>
-              <Nav.Link href='#opiniones'>Analizar Opiniones</Nav.Link>
-              <Nav.Link href='#modelo'>Reentrenar Modelo</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      <NavBar />
 
       {/* Hero Section */}
       <Container fluid className='text-center bg-light py-5'>
@@ -31,17 +19,16 @@ const Home = () => {
           Sostenible.
         </p>
         <div className='mt-4'>
-          <Button
-            variant='primary'
-            size='lg'
-            href='#opiniones'
-            className='me-3'
-          >
-            Analizar Opiniones
-          </Button>
-          <Button variant='outline-primary' size='lg' href='#modelo'>
-            Reentrenar Modelo
-          </Button>
+          <Link to="/predict"> {/* Cambiar href a Link */}
+            <Button variant='primary' size='lg' className='me-3'>
+              Analizar Opiniones
+            </Button>
+          </Link>
+          <Link to="/retrain"> {/* Cambiar href a Link */}
+            <Button variant='outline-primary' size='lg'>
+              Reentrenar Modelo
+            </Button>
+          </Link>
         </div>
       </Container>
 
@@ -56,9 +43,11 @@ const Home = () => {
                   Envía opiniones y descubre cómo se relacionan con los ODS 3, 4
                   y 5.
                 </Card.Text>
-                <Button variant='primary' href='#opiniones'>
-                  Acceder
-                </Button>
+                <Link to="/predict"> {/* Cambiar href a Link */}
+                  <Button variant='primary'>
+                    Acceder
+                  </Button>
+                </Link>
               </Card.Body>
             </Card>
           </Col>
@@ -70,9 +59,11 @@ const Home = () => {
                   Sube nuevos datos y mejora el modelo de análisis
                   automáticamente.
                 </Card.Text>
-                <Button variant='outline-primary' href='#modelo'>
-                  Acceder
-                </Button>
+                <Link to="/retrain"> {/* Cambiar href a Link */}
+                  <Button variant='outline-primary'>
+                    Acceder
+                  </Button>
+                </Link>
               </Card.Body>
             </Card>
           </Col>
@@ -80,13 +71,9 @@ const Home = () => {
       </Container>
 
       {/* Footer */}
-      <footer className='bg-light text-center py-4'>
-        <p className='mb-0'>
-          © 2024 UNFPA | <a href='#privacidad'>Política de Privacidad</a>
-        </p>
-      </footer>
+      <Footer />
     </>
-  )
+  );
 }
 
-export default Home
+export default Home;
