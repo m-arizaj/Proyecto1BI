@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Form, Col, Spinner } from 'react-bootstrap'
+import { Button, Form, Col, Spinner, Alert } from 'react-bootstrap'
 import { FaArrowLeft, FaRedo, FaSearch } from 'react-icons/fa'
 
 const FileOpinionForm = ({
@@ -7,20 +7,29 @@ const FileOpinionForm = ({
   loading,
   onBack,
   onSubmit,
-  opinions,
+  setError,
 }) => {
   const [file, setFile] = useState(null)
   const [columnName, setColumnName] = useState('')
   const [showRefresh, setShowRefresh] = useState(false)
 
   const handleFileUpload = (event) => {
-    setFile(event.target.files[0])
+    const uploadedFile = event.target.files[0]
+    const fileExtension = uploadedFile.name.split('.').pop().toLowerCase()
+
+    if (['xls', 'xlsx', 'csv'].includes(fileExtension)) {
+      setFile(uploadedFile)
+      setError(null)
+    } else {
+      setError('Por favor, sube un archivo válido (Excel o CSV).')
+    }
   }
 
   const handleRefresh = () => {
     setFile(null)
     setColumnName('')
     clearResults()
+    setError(null)
     setShowRefresh(false)
   }
 
@@ -34,7 +43,11 @@ const FileOpinionForm = ({
       <h4 className='text-center'>Subir Archivo (Excel/CSV)</h4>
 
       <Form.Group>
-        <Form.Control type='file' onChange={handleFileUpload} />
+        <Form.Control 
+          type='file' 
+          accept='.xls, .xlsx, .csv' 
+          onChange={handleFileUpload} 
+        />
       </Form.Group>
 
       <Form.Group className='mt-3'>
@@ -47,7 +60,7 @@ const FileOpinionForm = ({
       </Form.Group>
 
       <div className='text-center'>
-        <Button onClick={handlePredict} disabled={loading} className='mt-3'>
+        <Button onClick={handlePredict} disabled={loading || !file} className='mt-3'>
           {loading ? (
             <>
               <Spinner

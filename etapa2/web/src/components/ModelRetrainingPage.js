@@ -12,6 +12,7 @@ import {
 import * as XLSX from 'xlsx'
 import NavBar from './NavBar'
 import Footer from './Footer'
+import axios from 'axios'
 
 const ModelRetrainingPage = () => {
   const [file, setFile] = useState(null)
@@ -37,24 +38,12 @@ const ModelRetrainingPage = () => {
 
     try {
       const { texts, labels } = await processFile(file)
-      const response = await fetch('http://localhost:8000/retrain', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          texts,
-          labels,
-        }),
+      const response = await axios.post('http://localhost:8000/retrain', {
+        texts,
+        labels,
       })
 
-      if (!response.ok) {
-        throw new Error('Error en la solicitud.')
-      }
-
-      const data = await response.json()
-      setMetrics(data)
+      setMetrics(response.data)
     } catch (error) {
       console.error('Error:', error)
       setError('Error al reentrenar el modelo. Intenta de nuevo.')
@@ -107,7 +96,11 @@ const ModelRetrainingPage = () => {
         <Form>
           <Form.Group controlId='formFile' className='mb-3'>
             <Form.Label>Selecciona un archivo (Excel/CSV)</Form.Label>
-            <Form.Control type='file' onChange={handleFileChange} />
+            <Form.Control
+              type='file'
+              accept='.xls, .xlsx, .csv'
+              onChange={handleFileChange}
+            />
           </Form.Group>
 
           <Form.Group controlId='opinionColumn' className='mb-3'>
@@ -130,9 +123,17 @@ const ModelRetrainingPage = () => {
             />
           </Form.Group>
 
-          <div className="text-center mb-4">
-            <Button variant='primary' onClick={handleRetrain} disabled={loading}>
-              {loading ? <Spinner animation='border' size='sm' /> : 'Reentrenar'}
+          <div className='text-center mb-4'>
+            <Button
+              variant='primary'
+              onClick={handleRetrain}
+              disabled={loading}
+            >
+              {loading ? (
+                <Spinner animation='border' size='sm' />
+              ) : (
+                'Reentrenar'
+              )}
             </Button>
           </div>
         </Form>
@@ -148,31 +149,31 @@ const ModelRetrainingPage = () => {
             <Col>
               <Alert variant='success'>
                 <h4>Métricas de Reentrenamiento</h4>
-                <div className="mb-3">
+                <div className='mb-3'>
                   <strong>Precisión:</strong>
                   <ProgressBar
                     now={metrics.precision * 100}
                     label={`${(metrics.precision * 100).toFixed(2)}%`}
                     style={{ height: '30px' }}
-                    className="mt-1"
+                    className='mt-1'
                   />
                 </div>
-                <div className="mb-3">
+                <div className='mb-3'>
                   <strong>Recall:</strong>
                   <ProgressBar
                     now={metrics.recall * 100}
                     label={`${(metrics.recall * 100).toFixed(2)}%`}
                     style={{ height: '30px' }}
-                    className="mt-1"
+                    className='mt-1'
                   />
                 </div>
-                <div className="mb-3">
+                <div className='mb-3'>
                   <strong>F1 Score:</strong>
                   <ProgressBar
                     now={metrics.f1_score * 100}
                     label={`${(metrics.f1_score * 100).toFixed(2)}%`}
                     style={{ height: '30px' }}
-                    className="mt-1"
+                    className='mt-1'
                   />
                 </div>
               </Alert>
@@ -180,7 +181,7 @@ const ModelRetrainingPage = () => {
           </Row>
         )}
       </Container>
-      <Footer className="mt-5" />
+      <Footer className='mt-5' />
     </>
   )
 }

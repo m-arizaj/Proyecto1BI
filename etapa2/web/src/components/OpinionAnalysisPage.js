@@ -48,7 +48,7 @@ const OpinionAnalysisPage = () => {
       const texts = data.map((row) => row[columnName])
 
       if (texts.length > 0) {
-        setOpinions(texts) // Guardar las opiniones del archivo
+        setOpinions(texts)
         setLoading(true)
         axios
           .post('http://localhost:8000/predict/', { texts })
@@ -71,6 +71,7 @@ const OpinionAnalysisPage = () => {
     setMethod(null)
     setOpinions([])
     setResults(null)
+    setError(null)
   }
 
   return (
@@ -90,6 +91,7 @@ const OpinionAnalysisPage = () => {
               loading={loading}
               onBack={resetMethod}
               clearResults={() => setResults(null)}
+              setError={setError}
             />
           </Row>
         )}
@@ -102,11 +104,16 @@ const OpinionAnalysisPage = () => {
               onBack={resetMethod}
               opinions={opinions}
               clearResults={() => setResults(null)}
+              setError={setError}
             />
           </Row>
         )}
 
-        {error && <Alert variant='danger'>{error}</Alert>}
+        {error && (
+          <Alert variant='danger' className='mt-3'>
+            {error}
+          </Alert>
+        )}
 
         {results && (
           <Row className='mt-5'>
